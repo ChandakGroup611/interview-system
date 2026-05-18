@@ -71,6 +71,8 @@ export async function POST(request) {
         .from('reports')
         .update({ pdf_url: pdfUrl })
         .eq('id', report.id);
+    } else if (pdfUploadError) {
+      console.error('[STORAGE] PDF Upload error in resend:', pdfUploadError);
     }
 
     // Send email

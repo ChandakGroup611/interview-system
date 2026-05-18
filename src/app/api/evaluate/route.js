@@ -85,6 +85,8 @@ export async function POST(request) {
         .from('pdf-reports')
         .getPublicUrl(pdfFileName);
       pdfUrl = urlData?.publicUrl || '';
+    } else if (pdfUploadError) {
+      console.error('[STORAGE] PDF Upload error:', pdfUploadError);
     }
 
     // Create report in database
