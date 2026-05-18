@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function AdminDashboard() {
+export default function AdminDashboard({ params, searchParams }) {
+  use(params);
+  use(searchParams);
   const router = useRouter();
   const [activeSection, setActiveSection] = useState('sessions');
   const [data, setData] = useState([]);
@@ -21,9 +23,19 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      fetchData(1);
+      fetchData(page);
     }
-  }, [activeSection, isAuthenticated]);
+  }, [activeSection, isAuthenticated, page]);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    
+    const interval = setInterval(() => {
+      fetchData(page);
+    }, 30000);
+    
+    return () => clearInterval(interval);
+  }, [isAuthenticated, activeSection, page]);
 
   const checkAuth = async () => {
     try {
@@ -75,6 +87,27 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleBulkEvaluate = async () => {
+    const pendingSessions = data.filter(s => s.status === 'completed');
+    if (pendingSessions.length === 0) return;
+    
+    setLoading(true);
+    try {
+      for (const session of pendingSessions) {
+        await fetch('/api/evaluate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: session.id }),
+        });
+      }
+      fetchData(page);
+    } catch (err) {
+      setError(`Bulk eval error: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleString('en-US', {
       year: 'numeric', month: '2-digit', day: '2-digit',
@@ -112,7 +145,7 @@ export default function AdminDashboard() {
           <tr>
             <th>id</th>
             <th>name</th>
-            <th>phone</th>
+            <th>Chandak Mail id</th>
             <th className="text-right">created_at</th>
           </tr>
         );
@@ -122,16 +155,7 @@ export default function AdminDashboard() {
             <th>id</th>
             <th>session_id</th>
             <th className="text-right">final_score</th>
-            <th className="text-right">created_at</th>
-          </tr>
-        );
-      case 'email_logs':
-        return (
-          <tr>
-            <th>id</th>
-            <th>session_id</th>
-            <th>candidate_email</th>
-            <th>status</th>
+            <th>pdf</th>
             <th className="text-right">created_at</th>
           </tr>
         );
@@ -174,11 +198,11 @@ export default function AdminDashboard() {
       switch (activeSection) {
         case 'sessions': {
           const report = item.reports?.[0];
-          const score = report?.final_score || null;
+          const score = report?.final_score ?? null;
           return (
             <tr key={item.id}>
-              <td className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>{item.id.split('-')[0]}...</td>
-              <td className="text-mono" style={{ fontSize: '0.75rem' }}>{item.candidates?.name || item.candidate_id.split('-')[0]}</td>
+              <td className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>{item.id?.split('-')[0] || '—'}...</td>
+              <td className="text-mono" style={{ fontSize: '0.75rem' }}>{item.candidates?.name || item.candidate_id?.split('-')[0] || '—'}</td>
               <td>{item.project_name || 'null'}</td>
               <td className="text-right text-mono">{item.current_question || 0}</td>
               <td>
@@ -212,22 +236,17 @@ export default function AdminDashboard() {
         case 'reports':
           return (
             <tr key={item.id}>
-              <td className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>{item.id.split('-')[0]}...</td>
-              <td className="text-mono" style={{ fontSize: '0.75rem' }}>{item.session_id.split('-')[0]}...</td>
+              <td className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>{item.id?.split('-')[0] || '—'}...</td>
+              <td className="text-mono" style={{ fontSize: '0.75rem' }}>{item.session_id?.split('-')[0] || '—'}...</td>
               <td className="text-right text-mono">{item.final_score?.toFixed(1) || 'null'}</td>
-              <td className="text-right text-mono" style={{ fontSize: '0.75rem' }}>{formatDate(item.created_at)}</td>
-            </tr>
-          );
-        case 'email_logs':
-          return (
-            <tr key={item.id}>
-              <td className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>{item.id.split('-')[0]}...</td>
-              <td className="text-mono" style={{ fontSize: '0.75rem' }}>{item.session_id.split('-')[0]}...</td>
-              <td>{item.candidate_email}</td>
               <td>
-                <span className={`status-indicator status-${item.status}`}>
-                  {item.status}
-                </span>
+                {item.pdf_url ? (
+                  <a href={item.pdf_url} target="_blank" rel="noopener noreferrer" className="nav-link" style={{ fontSize: '0.7rem' }}>
+                    Download PDF
+                  </a>
+                ) : (
+                  <span className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>null</span>
+                )}
               </td>
               <td className="text-right text-mono" style={{ fontSize: '0.75rem' }}>{formatDate(item.created_at)}</td>
             </tr>
@@ -260,7 +279,7 @@ export default function AdminDashboard() {
           <h2 style={{ fontSize: '1.25rem', color: 'var(--text-black)' }}>Sources</h2>
         </div>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
-          {['sessions', 'candidates', 'reports', 'email_logs', 'admin_login_logs'].map(section => (
+          {['sessions', 'candidates', 'reports', 'admin_login_logs'].map(section => (
             <span
               key={section}
               className="nav-link"
@@ -335,10 +354,14 @@ export default function AdminDashboard() {
             </div>
           )}
 
-          {/* Data Table */}
           <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <h3 style={{ fontSize: '1.25rem', margin: 0 }}>Table: {activeSection}</h3>
-            <button className="btn btn-sm" onClick={() => fetchData(page)}>Force Sync</button>
+            <div style={{ display: 'flex', gap: '16px' }}>
+              {activeSection === 'sessions' && data.some(s => s.status === 'completed') && (
+                <button className="btn btn-primary btn-sm" onClick={handleBulkEvaluate}>Process All Pending</button>
+              )}
+              <button className="btn btn-sm" onClick={() => fetchData(page)}>Force Sync</button>
+            </div>
           </div>
 
           <div className="table-container">

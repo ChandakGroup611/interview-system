@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServiceSupabase } from '@/lib/supabase';
-import { getGeminiModel } from '@/lib/gemini';
+import { generateSimpleContent } from '@/lib/gemini';
 import { buildFirstQuestionPrompt } from '@/lib/prompts';
 import { PROJECTS } from '@/lib/projectData';
 
@@ -9,68 +9,47 @@ export const dynamic = 'force-dynamic';
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, phone, persona, projectId = 'greenairy' } = body;
-    
+    const { name, email, persona, projectId = 'greenairy' } = body;
+
     const project = PROJECTS[projectId] || PROJECTS['greenairy'];
     const projectName = project.projectName;
 
-    if (!name || !phone) {
+    if (!name || !email) {
       return NextResponse.json(
-        { error: 'Name and phone are required' },
+        { error: 'Name and email are required' },
         { status: 400 }
       );
     }
 
-    // Validate phone number (basic validation)
-    const phoneRegex = /^[+]?[\d\s-]{10,15}$/;
-    if (!phoneRegex.test(phone)) {
+    // Validate email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: 'Invalid phone number format' },
+        { error: 'Invalid email format' },
         { status: 400 }
       );
     }
 
     const supabase = getServiceSupabase();
 
-    // Create or get candidate
-    let { data: existingCandidate } = await supabase
+    // Always create a fresh candidate record for every new session
+    // This ensures each session has its own candidate entry and names never bleed across sessions
+    const { data: candidate, error: candidateError } = await supabase
       .from('candidates')
-      .select('*')
-      .eq('phone', phone)
+      .insert({ name, phone: email }) // Storing email in the phone column for DB compatibility
+      .select()
       .single();
 
-    let candidate;
-    if (existingCandidate) {
-      candidate = existingCandidate;
-      // Update name if different
-      if (existingCandidate.name !== name) {
-        await supabase
-          .from('candidates')
-          .update({ name })
-          .eq('id', existingCandidate.id);
-        candidate.name = name;
-      }
-    } else {
-      const { data: newCandidate, error: candidateError } = await supabase
-        .from('candidates')
-        .insert({ name, phone })
-        .select()
-        .single();
-
-      if (candidateError) {
-        throw new Error(`Failed to create candidate: ${candidateError.message}`);
-      }
-      candidate = newCandidate;
+    if (candidateError) {
+      throw new Error(`Failed to create candidate: ${candidateError.message}`);
     }
 
     // Select initial persona (from request or default to easy-going)
     const initialPersona = persona || 'easy-going';
 
     // Generate first AI question
-    const model = getGeminiModel();
     const firstQuestionPrompt = buildFirstQuestionPrompt(initialPersona, projectId);
-    const result = await model.generateContent(firstQuestionPrompt);
-    const firstQuestion = result.response.text();
+    const firstQuestion = await generateSimpleContent(firstQuestionPrompt);
 
     // Create session
     const initialTranscript = [
@@ -108,7 +87,7 @@ export async function POST(request) {
     // Graceful degradation: If project_id column is missing, retry without it
     if (sessionError && sessionError.message.includes('project_id')) {
       console.warn('Supabase schema missing project_id column. Retrying without project tracking.');
-      
+
       const legacySessionData = { ...sessionData };
       delete legacySessionData.project_id;
       delete legacySessionData.project_name;
@@ -118,7 +97,7 @@ export async function POST(request) {
         .insert(legacySessionData)
         .select()
         .single();
-      
+
       session = legacySession;
       sessionError = legacyError;
     }

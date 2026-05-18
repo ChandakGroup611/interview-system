@@ -11,7 +11,7 @@ export async function GET(request) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const offset = (page - 1) * limit;
 
-    if (!['candidates', 'reports', 'email_logs', 'admin_login_logs'].includes(table)) {
+    if (!['candidates', 'reports', 'admin_login_logs'].includes(table)) {
       return NextResponse.json({ error: 'Invalid table' }, { status: 400 });
     }
 

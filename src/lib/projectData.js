@@ -6,23 +6,28 @@
 export const PROJECTS = {
   "greenairy": {
     projectName: "Chandak Greenairy",
-    configurations: {
-      "1 BHK": {
-        sizes: [444, 463, 476],
-        unit: "sq ft",
-      },
-      "2 BHK": {
-        sizes: [661, 667, 669, 683],
-        unit: "sq ft",
-      },
-      "3 BHK": {
-        sizes: [899, 1146, 1152],
-        unit: "sq ft",
-      },
-      "4 BHK": {
-        sizes: [1327, 1346, 1378],
-        unit: "sq ft",
-      },
+    floorBands: [
+      "12-36",
+      "37-45",
+      "46-48 (only sold after occupancy certificate is received and possession is given)"
+    ],
+    wings: {
+      "Tower A": [
+        "Unit 1 & 2: 1 BHK — 444 sq ft (RERA carpet 420 sq ft) [Rooms: Bedroom: 10'0\" × 11'7\", Living/Dining: 10'0\" × 16'0\", Kitchen: 7'0\" × 7'9\", Balcony: 6'4\" × 4'0\"]",
+        "Unit 3 & 4: 2 BHK — 669 sq ft (RERA carpet 629 sq ft) [Rooms: Bedroom 1: 10'0\" × 14'3\", Bedroom 2: 10'0\" × 11'0\", Living/Dining: 10'3\" × 16'0\", Kitchen: 9'0\" × 7'0\", Balcony: 10'6\" × 4'0\"]",
+        "Unit 5 & 6: 2 BHK — 667 sq ft (RERA carpet 636 sq ft) [Rooms: Bedroom 1: 12'6\" × 10'4\", Bedroom 2: 10'4\" × 10'0\", Living/Dining: 10'1\" × 16'0\", Kitchen: 9'8\" × 7'10\", Balcony: 7'10\" × 4'0\"]",
+        "Unit 7 & 8: 1 BHK — 463 sq ft (RERA carpet 434 sq ft) [Rooms: Bedroom: 10'0\" × 11'0\", Living/Dining: 10'0\" × 16'6\", Kitchen: 7'7\" × 8'2\", Balcony: 7'5\" × 4'0\"]",
+        "Unit 9 & 10: 3 BHK — 899 sq ft (RERA carpet 849 sq ft) [Rooms: Bedroom 1: 10'0\" × 11'7\", Bedroom 2: 10'0\" × 11'7\", Kid’s Room: 7'0\" × 7'9\", Living/Dining: 20'6\" × 16'3\", Kitchen: 7'0\" × 7'9\", Balcony: 13'2\" × 4'0\", Study Zone: 4'5\" × 6'1\"]",
+        "Unit 11 & 12: 4 BHK — 1346 sq ft (RERA carpet 1265 sq ft) [Rooms: Bedroom 1: 10'0\" × 14'3\", Bedroom 2: 10'0\" × 11'0\", Bedroom 3: 9'0\" × 11'6\", Bedroom 4: 11'6\" × 11'0\", Living/Dining: 21'6\" × 11'6\", Kitchen: 9'0\" × 9'1\", Utility/Store: 5'9\" × 4'2\", Balcony: 21'6\" × 4'0\", Walk-in Wardrobe: 8'6\" × 5'0\", Study Area: 8'6\" × 8'6\"]"
+      ],
+      "Tower B": [
+        "Unit 1 & 2: 1 BHK — 444 sq ft (RERA carpet 420 sq ft) [Rooms: Bedroom: 10'0\" × 11'7\", Living/Dining: 10'0\" × 16'0\", Kitchen: 7'0\" × 7'9\", Balcony: 6'4\" × 4'0\"]",
+        "Unit 3 & 4: 2 BHK — 669 sq ft (RERA carpet 629 sq ft) [Rooms: Bedroom 1: 10'0\" × 14'3\", Bedroom 2: 10'0\" × 11'0\", Living/Dining: 10'3\" × 16'0\", Kitchen: 9'0\" × 7'0\", Balcony: 10'6\" × 4'0\"]",
+        "Unit 5 & 6: 2 BHK — 667 sq ft (RERA carpet 636 sq ft) [Rooms: Bedroom 1: 12'6\" × 10'4\", Bedroom 2: 10'4\" × 10'0\", Living/Dining: 10'1\" × 16'0\", Kitchen: 9'8\" × 7'10\", Balcony: 7'10\" × 4'0\"]",
+        "Unit 7 & 8: 1 BHK — 463 sq ft (RERA carpet 434 sq ft) [Rooms: Bedroom: 10'0\" × 11'0\", Living/Dining: 10'0\" × 16'6\", Kitchen: 7'7\" × 8'2\", Balcony: 7'5\" × 4'0\"]",
+        "Unit 9 & 10: 3 BHK — 899 sq ft (RERA carpet 849 sq ft) [Rooms: Bedroom 1: 10'0\" × 11'7\", Bedroom 2: 10'0\" × 11'7\", Kid’s Room: 7'0\" × 7'9\", Living/Dining: 20'6\" × 16'3\", Kitchen: 7'0\" × 7'9\", Balcony: 13'2\" × 4'0\", Study Zone: 4'5\" × 6'1\"]",
+        "Unit 11 & 12: 4 BHK — 1346 sq ft (RERA carpet 1265 sq ft) [Rooms: Bedroom 1: 10'0\" × 14'3\", Bedroom 2: 10'0\" × 11'0\", Bedroom 3: 9'0\" × 11'6\", Bedroom 4: 11'6\" × 11'0\", Living/Dining: 21'6\" × 11'6\", Kitchen: 9'0\" × 9'1\", Utility/Store: 5'9\" × 4'2\", Balcony: 21'6\" × 4'0\", Walk-in Wardrobe: 8'6\" × 5'0\", Study Area: 8'6\" × 8'6\"]"
+      ]
     },
     usp: [
       "Prime location with excellent connectivity",
@@ -94,7 +99,7 @@ export const PROJECTS = {
       { q: "What is the grade of cement used for walls and slabs", a: "Minimum OPC43" },
       { q: "Total no of Servant's toilets and their location in the complex/building", a: "1 nos. on each residential floor in each tower. On the midlanding of staircase" },
       { q: "What is the weight capacity of the service lift for carrying furniture and materials", a: "Service lift has weight capacity of 1000 kg" },
-      { q: "No of refuge flats and its floors & the total area of refuge", a: "14 flats in each tower (considering G+45 floors) and one more refuge floor on 7th level which is commercial level. Residential refuge FSI area is approximately 9850 sq ft in each tower" },
+      { q: "No of refuge flats and its floors & the total area of refuge", a: "14 flats in each tower (considering G+48 floors) and one more refuge floor on 7th level which is commercial level. Residential refuge FSI area is approximately 9850 sq ft in each tower" },
       { q: "Do we have rain water harvesting? If yes then what is the storage capacity", a: "Rain water tank" },
       { q: "Do we have a Borewell", a: "No" },
       { q: "Is there a Provision for EV charging and the number of slots for the same", a: "10% of parking spaces" },
@@ -197,23 +202,25 @@ export const PROJECTS = {
     ],
     wings: {
       "Wing E (Sapphire)": [
-        "Unit 1 & 2: Signature 3 BHK — 1,280 sq ft (RERA carpet 1,090 sq ft) — floors 1–12",
-        "Unit 3 & 4: Royal 2 BHK — 780 sq ft (floors 1–10), 825 sq ft on 11th & 12th floors"
+        "Unit 1 & 2: Signature 3 BHK — 1,280 sq ft (RERA carpet 1,090 sq ft) — floors 1–12 [Rooms: Bedroom 1: 11'0\" × 14'10\", Bedroom 2: 10'0\" × 13'0\", Bedroom 3: 10'6\" × 13'0\", Living: 11'0\" × 20'2\", Kitchen: 8'0\" × 11'7\"]",
+        "Unit 3 & 4: Royal 2 BHK — 780 sq ft (floors 1–10), 825 sq ft on 11th & 12th floors [Rooms (780 sq ft): Bedroom 1: 12'0\" × 11'0\", Bedroom 2: 10'6\" × 13'0\", Living: 10'6\" × 20'2\", Kitchen: 7'6\" × 9'10\"]"
       ],
       "Wing F (Emerald)": [
-        "Unit 1: Regal 4 BHK — 2,440 sq ft (RERA carpet 2,077 sq ft) — floors 1–12",
-        "Unit 2: Signature 3 BHK — 1,280 sq ft — floors 1–12",
+        "Unit 1: Regal 4 BHK — 2,440 sq ft (RERA carpet 2,077 sq ft) — floors 1–12 [Rooms: Bedroom 1: 12'0\" × 16'0\", Bedroom 2: 13'0\" × 12'5\", Bedroom 3: 12'0\" × 12'5\", Bedroom 4: 13'0\" × 16'0\", Living/Dining: 21'0\" × 25'4\", Kitchen: 12'9\" × 8'10\"]",
+        "Unit 2: Signature 3 BHK — 1,280 sq ft — floors 1–12 [Rooms: Bedroom 1: 11'0\" × 14'10\", Bedroom 2: 10'0\" × 13'0\", Bedroom 3: 10'6\" × 13'0\", Living: 11'0\" × 20'2\", Kitchen: 8'0\" × 11'7\"]",
         "Unit 3: Royal 3 BHK — 1,260 sq ft — floors 1–12"
       ],
       "Wing C (Jade)": [
-        "Units 1, 2, 3: Elite 3 BHK — 1,100 sq ft — floors 1–10",
-        "Unit 4: Elite 2 BHK — 775 sq ft — floors 1–10",
+        "Unit 1: Elite 3 BHK — 1,100 sq ft — floors 1–10 [Rooms: Bedroom 1: 13'0\" × 9'0\", Bedroom 2: 12'1\" × 10'5\", Bedroom 3: 12'11\" × 11'0\", Living/Dining: 22'0\" × 11'0\", Kitchen: 10'3\" × 8'0\"]",
+        "Unit 2: Elite 3 BHK — 1,100 sq ft — floors 1–10 [Rooms: Bedroom 1: 13'1\" × 10'0\", Bedroom 2: 12'11\" × 10'5\", Bedroom 3: 12'11\" × 11'0\", Living/Dining: 22'1\" × 11'0\", Kitchen: 10'3\" × 8'0\"]",
+        "Unit 3: Elite 3 BHK — 1,100 sq ft — floors 1–10 [Rooms: Bedroom 1: 13'1\" × 10'0\", Bedroom 2: 12'11\" × 10'5\", Bedroom 3: 12'11\" × 11'0\", Living/Dining: 22'1\" × 11'0\", Kitchen: 10'3\" × 8'0\"]",
+        "Unit 4: Elite 2 BHK — 775 sq ft — floors 1–10 [Rooms: Bedroom 1: 11'0\" × 10'0\", Bedroom 2: 10'0\" × 10'0\", Living/Dining: 18'0\" × 10'6\", Kitchen: 7'6\" × 8'0\"]",
         "Top floor: Pool, kids pool, steam rooms, massage room, spa area"
       ],
       "Wing D (Opal)": [
-        "Unit 1: Royal 3 BHK — 1,227 sq ft — floors 1–12",
-        "Unit 2: Signature 4 BHK — 1,646 sq ft — floors 1–12",
-        "Unit 3: Royal 2 BHK — 780 sq ft (floors 1–10), 825 sq ft (floors 11–12)"
+        "Unit 1: Royal 3 BHK — 1,227 sq ft — floors 1–12 [Rooms: Bedroom 1: 11'0\" × 14'10\", Bedroom 2: 10'6\" × 13'0\", Bedroom 3: 10'10\" × 14'10\", Living: 11'0\" × 20'2\", Kitchen: 7'10\" × 11'6\"]",
+        "Unit 2: Signature 4 BHK — 1,646 sq ft — floors 1–12 [Rooms: Bedroom 1: 16'0\" × 10'5\", Bedroom 2: 12'7\" × 10'0\", Bedroom 3: 12'7\" × 10'0\", Bedroom 4: 16'0\" × 10'5\", Living/Dining: 23'0\" × 16'2\", Kitchen: 9'10\" × 9'5\"]",
+        "Unit 3: Royal 2 BHK — 780 sq ft (floors 1–10), 825 sq ft (floors 11–12) [Rooms (780 sq ft): Bedroom 1: 12'0\" × 11'0\", Bedroom 2: 10'6\" × 13'0\", Living: 10'6\" × 20'2\", Kitchen: 7'6\" × 9'10\"]"
       ]
     },
     usp: [
@@ -390,47 +397,47 @@ export const PROJECTS = {
     },
     wings: {
       "Tower 1 (2 units/floor)": [
-        "Unit 1: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 6–14",
-        "Unit 2: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,236 sq ft) — floors 6–14",
-        "Unit 2 (2nd floor variant): Signature 3 BHK — 1,315 sq ft (RERA carpet 1,186 sq ft)"
+        "Unit 1: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 6–14 [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 2: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,236 sq ft) — floors 6–14 [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 2 (2nd floor variant): Signature 3 BHK — 1,315 sq ft (RERA carpet 1,186 sq ft) [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 11'0\" × 15'3\", Living/Dining: 11'8\" × 21'10\", Kitchen: 13'5\" × 9'0\"]"
       ],
       "Tower 2 (2 units/floor)": [
-        "Unit 1: Regal 4 BHK — 1,885 sq ft (RERA carpet 1,650 sq ft) — floors 1–5, 7, 9–14"
+        "Unit 1: Regal 4 BHK — 1,885 sq ft (RERA carpet 1,650 sq ft) — floors 1–5, 7, 9–14 [Rooms: Bedroom 1: 13'0\" × 15'0\", Bedroom 2: 11'0\" × 14'0\", Bedroom 3: 11'0\" × 13'0\", Bedroom 4: 11'0\" × 13'0\", Living/Dining: 19'0\" × 15'0\", Kitchen: 11'0\" × 13'2\", Utility: 5'2\" × 7'5\"]"
       ],
       "Tower 3 (2 units/floor)": [
-        "Unit 1: Signature 3 BHK — 1,370 sq ft (RERA carpet 1,200 sq ft) — floors 1–14",
-        "Unit 2: Royal 2 BHK — 873 sq ft (RERA carpet 807 sq ft) — floors 9, 11–14"
+        "Unit 1: Signature 3 BHK — 1,370 sq ft (RERA carpet 1,200 sq ft) — floors 1–14 [Rooms: Bedroom 1: 11'0\" × 15'0\", Bedroom 2: 10'6\" × 14'0\", Bedroom 3: 11'0\" × 15'0\", Living/Dining: 11'8\" × 20'3\", Kitchen: 9'0\" × 12'0\"]",
+        "Unit 2: Royal 2 BHK — 873 sq ft (RERA carpet 807 sq ft) — floors 9, 11–14 [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Living/Dining: 11'8\" × 17'0\", Kitchen: 8'0\" × 10'0\"]"
       ],
       "Tower 4 (4 units/floor)": [
-        "Unit 1: Signature 3 BHK — 1,311 sq ft (3rd floor), 1,335 sq ft (9th, 11th–14th floors)",
-        "Unit 2: Signature 3 BHK — 1,335 sq ft (9th–14th floors)",
-        "Unit 3: Royal 3 BHK — 1,085 sq ft (9th, 11th–14th floors)",
-        "Unit 4: Royal 3 BHK — 1,007 sq ft (6th floor), 1,085 sq ft (9th, 11th–14th floors)"
+        "Unit 1: Signature 3 BHK — 1,311 sq ft (3rd floor) [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 11'0\" × 15'3\", Living/Dining: 11'8\" × 21'10\", Kitchen: 13'5\" × 9'0\"], 1,335 sq ft (9th, 11th–14th floors) [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 2: Signature 3 BHK — 1,335 sq ft (9th–14th floors) [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 3: Royal 3 BHK — 1,085 sq ft (9th, 11th–14th floors) [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 10'8\" × 13'0\", Living/Dining: 11'8\" × 18'0\", Kitchen: 8'0\" × 10'0\"]",
+        "Unit 4: Royal 3 BHK — 1,007 sq ft (6th floor), 1,085 sq ft (9th, 11th–14th floors) [Rooms (1085 sq ft): Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 10'8\" × 13'0\", Living/Dining: 11'8\" × 18'0\", Kitchen: 8'0\" × 10'0\"]"
       ],
       "Tower 5 (2 units/floor)": [
-        "Unit 1: Signature 3 BHK — 1,370 sq ft (RERA carpet 1,200 sq ft) — floors 1–7, 9–14",
-        "Unit 2: Royal 2 BHK — 841 sq ft (3rd floor), 873 sq ft (11th–14th floors)"
+        "Unit 1: Signature 3 BHK — 1,370 sq ft (RERA carpet 1,200 sq ft) — floors 1–7, 9–14 [Rooms: Bedroom 1: 11'0\" × 15'0\", Bedroom 2: 10'6\" × 14'0\", Bedroom 3: 11'0\" × 15'0\", Living/Dining: 11'8\" × 20'3\", Kitchen: 9'0\" × 12'0\"]",
+        "Unit 2: Royal 2 BHK — 841 sq ft (3rd floor), 873 sq ft (11th–14th floors) [Rooms (873 sq ft): Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Living/Dining: 11'8\" × 17'0\", Kitchen: 8'0\" × 10'0\"]"
       ],
       "Tower 6 (2 units/floor)": [
-        "Unit 1: Regal 4 BHK — 1,885 sq ft (RERA carpet 1,658 sq ft) — floors 1–7, 9–14",
-        "Unit 1 (8th floor refuge): Signature 2 BHK — 1,252 sq ft (RERA carpet 1,072 sq ft)",
-        "Unit 2: Royal 3 BHK — 1,158 sq ft (floors 1, 11–14)",
+        "Unit 1: Regal 4 BHK — 1,885 sq ft (RERA carpet 1,658 sq ft) — floors 1–7, 9–14 [Rooms: Bedroom 1: 13'0\" × 15'0\", Bedroom 2: 11'0\" × 14'0\", Bedroom 3: 11'0\" × 13'0\", Bedroom 4: 11'0\" × 13'0\", Living/Dining: 19'0\" × 15'0\", Kitchen: 11'0\" × 13'2\", Utility: 5'2\" × 7'5\"]",
+        "Unit 1 (8th floor refuge): Signature 2 BHK — 1,252 sq ft (RERA carpet 1,072 sq ft) [Rooms: Bedroom 1: 11'0\" × 15'0\", Bedroom 2: 11'0\" × 14'0\", Living/Dining: 19'0\" × 15'0\", Kitchen: 11'0\" × 13'2\"]",
+        "Unit 2: Royal 3 BHK — 1,158 sq ft (floors 1, 11–14) [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 10'8\" × 13'0\", Living/Dining: 11'8\" × 18'0\", Kitchen: 8'0\" × 10'0\"]",
         "Unit 2 (8th floor refuge): Royal 2 BHK — 954 sq ft (RERA carpet 835 sq ft)"
       ],
       "Tower 7 (3 units/floor)": [
-        "Unit 1: (Regal 4 BHK per typical plan)",
-        "Unit 2: Royal 3 BHK — 1,158 sq ft (RERA carpet 1,039 sq ft) — floors 8, 11, 13–14",
-        "Unit 3: Regal 4 BHK — 1,885 sq ft (RERA carpet 1,667 sq ft) — floors 1–14"
+        "Unit 1: (Regal 4 BHK per typical plan) [Rooms (assuming 1885 sq ft): Bedroom 1: 13'0\" × 15'0\", Bedroom 2: 11'0\" × 14'0\", Bedroom 3: 11'0\" × 13'0\", Bedroom 4: 11'0\" × 13'0\", Living/Dining: 19'0\" × 15'0\", Kitchen: 11'0\" × 13'2\", Utility: 5'2\" × 7'5\"]",
+        "Unit 2: Royal 3 BHK — 1,158 sq ft (RERA carpet 1,039 sq ft) — floors 8, 11, 13–14 [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 10'8\" × 13'0\", Living/Dining: 11'8\" × 18'0\", Kitchen: 8'0\" × 10'0\"]",
+        "Unit 3: Regal 4 BHK — 1,885 sq ft (RERA carpet 1,667 sq ft) — floors 1–14 [Rooms: Bedroom 1: 13'0\" × 15'0\", Bedroom 2: 11'0\" × 14'0\", Bedroom 3: 11'0\" × 13'0\", Bedroom 4: 11'0\" × 13'0\", Living/Dining: 19'0\" × 15'0\", Kitchen: 11'0\" × 13'2\", Utility: 5'2\" × 7'5\"]"
       ],
       "Tower 8A (3 units/floor)": [
-        "Unit 1: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 9, 11–14",
-        "Unit 2: Royal 3 BHK — 1,149 sq ft (RERA carpet 1,045 sq ft) — 5th floor",
-        "Unit 3: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 8, 9, 12–14"
+        "Unit 1: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 9, 11–14 [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 2: Royal 3 BHK — 1,149 sq ft (RERA carpet 1,045 sq ft) — 5th floor [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 10'8\" × 13'0\", Living/Dining: 11'8\" × 18'0\", Kitchen: 8'0\" × 10'0\"]",
+        "Unit 3: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 8, 9, 12–14 [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]"
       ],
       "Tower 8B (3 units/floor)": [
-        "Unit 1: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 10–14",
-        "Unit 2: Signature 3 BHK — 1,315 sq ft (3rd floor), 1,365 sq ft (9th, 11th–14th floors)",
-        "Unit 3: Royal 3 BHK — 1,149 sq ft (RERA carpet 1,045 sq ft) — floors 12, 14"
+        "Unit 1: Signature 3 BHK — 1,365 sq ft (RERA carpet 1,237 sq ft) — floors 10–14 [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 2: Signature 3 BHK — 1,315 sq ft (3rd floor) [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 11'0\" × 15'3\", Living/Dining: 11'8\" × 21'10\", Kitchen: 13'5\" × 9'0\"], 1,365 sq ft (9th, 11th–14th floors) [Rooms: Bedroom 1: 13'0\" × 11'0\", Bedroom 2: 14'0\" × 11'0\", Bedroom 3: 14'3\" × 11'6\", Living/Dining: 13'3\" × 19'4\", Kitchen: 11'4\" × 10'4\"]",
+        "Unit 3: Royal 3 BHK — 1,149 sq ft (RERA carpet 1,045 sq ft) — floors 12, 14 [Rooms: Bedroom 1: 11'0\" × 13'8\", Bedroom 2: 11'0\" × 13'0\", Bedroom 3: 10'8\" × 13'0\", Living/Dining: 11'8\" × 18'0\", Kitchen: 8'0\" × 10'0\"]"
       ]
     },
     usp: [
@@ -449,11 +456,11 @@ export const PROJECTS = {
       "Converting a premium buyer who is comparing Vile Parle vs Andheri"
     ],
     faqs: [
-      { q: "When was Chandak Group founded? How many years of experience does Chandak Group have?", a: "1986 (38+ years of experience)" },
+      { q: "When was Chandak Group founded? How many years of experience does Chandak Group have?", a: "1986 (40 years of experience)" },
       { q: "How many projects in total have Chandak Group developed? What's the split of residential and commercial projects?", a: "30+ Completed projects" },
       { q: "How many ongoing projects does Chandak Group have in total as of date?", a: "9 ongoing projects" },
       { q: "Does the developer have a good reputation in the market?", a: "Yes" },
-      { q: "How many sq.ft of area has Chandak Group delivered till date?", a: "12 Million+ sq.ft" },
+      { q: "How many sq.ft of area has Chandak Group delivered till date?", a: "21 Million+ sq.ft" },
       { q: "How many families (units sold) have Chandak Group catered to till date?", a: "11000+" },
       { q: "Total size of land parcel v/s Sale Plot (Phase B)", a: "Architect team" },
       { q: "Total Number of Flats V/s flats for sale", a: "Architect team" },
@@ -638,7 +645,7 @@ export const PROJECTS = {
       { q: "What is the design and feature description of the terrace?", a: "Refer separate sheet." },
     ]
   },
-  "Highscape City": {
+  "highscape": {
     projectName: "Chandak Highscape City",
     developer: "Chandak Group",
     location: "Chembur (East), Mumbai — Off Eastern Freeway, Sahyadri Nagar, Chembur (E), Mumbai – 400074",
@@ -665,63 +672,63 @@ export const PROJECTS = {
     },
     wings: {
       "Tower: Summit (Standard Floor Mix)": [
-        "Units 1 & 2: Elite 2 BHK — RERA carpet 660 sq ft / Total 660 sq ft (no additional area)",
+        "Units 1 & 2: Elite 2 BHK — RERA carpet 660 sq ft / Total 660 sq ft (no additional area) [Rooms: Living/Dining: 10'0\" x 17'7\", Bedroom 1: 10'0\" x 11'0\", Bedroom 2: 10'6\" x 12'0\", Kitchen: 7'6\" x 11'0\", Toilet 1: 4'0\" x 7'0\", Toilet 2: 7'0\" x 4'9\", Passage: 3' Wide]",
         "Units 3, 4 & 5: 1 BHK — RERA carpet 407 sq ft / Total 407 sq ft (no additional area)",
         "Units 6, 7, 8, 9, 10 & 11: 1 BHK — RERA carpet 428 sq ft / Total 428 sq ft (no additional area)"
       ],
       "Tower: Summit (Jodi Options)": [
-        "Units 1 & 2 → 2+2 Jodi: RERA carpet 1,330 sq ft / Total 1,330 sq ft (no additional area)",
-        "Units 3 & 4 → 1+1 Jodi: RERA carpet 820 sq ft / Total 820 sq ft",
-        "Units 6 & 7 → 1+1 Jodi: RERA carpet 842 sq ft / Total 842 sq ft",
-        "Units 8 & 9 → 1+1 Jodi: RERA carpet 842 sq ft / Total 842 sq ft",
-        "Units 10 & 11 → 1+1 Jodi: RERA carpet 863 sq ft / Total 863 sq ft"
+        "Units 1 & 2 → 2+2 Jodi: RERA carpet 1,330 sq ft / Total 1,330 sq ft (no additional area) [Rooms: Living/Dining: Room shown in plan, Bedroom 1: 10'6\" x 12'8\", Bedroom 2: 7'9\" x 6'9\", Bedroom 3: 7'9\" x 6'9\", Bedroom 4: 13'6\" x 12'3\", Walk-in Wardrobe: 10'2\" x 10'5\", Kitchen: 7'8\" x 11'0\"]",
+        "Units 3 & 4 → 1+1 Jodi: RERA carpet 820 sq ft / Total 820 sq ft [Rooms: Living/Dining: 30'7\" x 13'3\", Bedroom 1: 7'3\" x 7'11\", Bedroom 2: 10'2\" x 10'8\", Bedroom 3: 8'7\" x 10'8\", Kitchen: 7'3\" x 7'11\", Walk-in Wardrobe: 6'11\" x 4'3\"]",
+        "Units 6 & 7 → 1+1 Jodi: RERA carpet 842 sq ft / Total 842 sq ft [Rooms: Living/Dining: 20'5\" x 13'1\", Bedroom 1: 7'2\" x 8'10\", Bedroom 2: 11'2\" x 10'4\", Bedroom 3: 8'7\" x 10'4\", Kitchen: 7'2\" x 8'10\"]",
+        "Units 8 & 9 → 1+1 Jodi: RERA carpet 842 sq ft / Total 842 sq ft [Rooms: Mirror of Units 6 & 7]",
+        "Units 10 & 11 → 1+1 Jodi: RERA carpet 863 sq ft / Total 863 sq ft [Rooms: Living/Dining: 30'5\" x 10'3\", Bedroom 1: 7'2\" x 6'10\", Bedroom 2: 11'2\" x 10'8\", Bedroom 3: 6'7\" x 4'0\", Kitchen: 7'2\" x 6'10\"]"
       ],
       "Tower: Pinnacle (Standard Floors below 32nd)": [
         "Units 1, 4, 5 & 8: 1 BHK — RERA carpet 407 sq ft / Total 407 sq ft (no additional area)",
-        "Units 2, 3, 6 & 7: Elite 2 BHK — RERA carpet 602 sq ft + Additional 36 sq ft / Total 638 sq ft"
+        "Units 2, 3, 6 & 7: Elite 2 BHK — RERA carpet 602 sq ft + Additional 36 sq ft / Total 638 sq ft [Rooms: Living Room: 10'0\" x 15'3\", Bedroom 1: 11'0\" x 10'2\", Bedroom 2: 10'0\" x 13'0\", Kitchen: 9'0\" x 7'0\", Utility: 3'0\" x 4'7\", Toilet 1: 7'0\" x 4'0\", Toilet 2: 4'0\" x 7'0\", Balcony: 5'3\" x 4'5\", Passage: 3' Wide]"
       ],
       "Tower: Pinnacle (32nd Floor & Above)": [
         "Units 1, 4, 5 & 8: 1 BHK — RERA carpet 414 sq ft + Additional 28 sq ft / Total 442 sq ft",
         "Units 2, 3, 6 & 7: Elite 2 BHK — RERA carpet 605 sq ft + Additional 62 sq ft / Total 667 sq ft"
       ],
       "Tower: Pinnacle (Jodi Options below 32nd)": [
-        "Units 1 & 2 → 1+2 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft",
-        "Units 3 & 4 → 2+1 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft",
-        "Units 5 & 6 → 1+2 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft",
-        "Units 7 & 8 → 2+1 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft"
+        "Units 1 & 2 → 1+2 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft [Rooms: Living/Dining: 14'7\" x 15'3\", Bedroom 1: 10'6\" x 15'3\", Bedroom 2: 11'1\" x 10'0\", Bedroom 3: 10'0\" x 13'0\", Study: 7'9\" x 7'11\", Kitchen: 8'2\" x 12'0\", Utility: 3'0\" x 4'7\", Balcony: 5'3\" x 4'3\", Passage: 3'0\"]",
+        "Units 3 & 4 → 2+1 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft [Rooms: Mirror of Units 1 & 2 Jodi]",
+        "Units 5 & 6 → 1+2 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft [Rooms: Same layout as Units 1 & 2 Jodi]",
+        "Units 7 & 8 → 2+1 Jodi: RERA carpet 1,015 sq ft + Additional 36 sq ft / Total 1,051 sq ft [Rooms: Mirror of Units 5 & 6 Jodi]"
       ],
       "Tower: Pinnacle (Jodi Options 32nd & above)": [
-        "Units 1 & 2 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft",
-        "Units 3 & 4 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft",
-        "Units 5 & 6 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft",
-        "Units 7 & 8 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft"
+        "Units 1 & 2 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft [Rooms: Living/Dining: 14'7\" x 15'3\", Bedroom 1: 10'5\" x 10'3\", Bedroom 2: 11'0\" x 10'0\", Bedroom 3: 10'0\" x 13'0\", Study: 7'9\" x 7'11\", Balcony: 15'11\" x 6'5\", Kitchen: 8'2\" x 12'0\", Utility: 3'0\" x 4'7\", Passage: 3'9\" Wide]",
+        "Units 3 & 4 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft [Rooms: Mirror of Units 1 & 2 Jodi]",
+        "Units 5 & 6 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft [Rooms: Same layout as Units 1 & 2 Jodi]",
+        "Units 7 & 8 → 2+1 Jodi: RERA carpet 1,025 sq ft + Additional 92 sq ft / Total 1,117 sq ft [Rooms: Mirror of Units 5 & 6 Jodi]"
       ],
       "Tower: Skyline (Standard Floors below 32nd)": [
-        "Units 1 & 2: Elite 3 BHK — RERA carpet 812 sq ft + Additional 36 sq ft / Total 848 sq ft",
+        "Units 1 & 2: Elite 3 BHK — RERA carpet 812 sq ft + Additional 36 sq ft / Total 848 sq ft [Rooms: Living Room: 10'0\" x 17'0\", Bedroom 1: 10'0\" x 12'0\", Bedroom 2: 10'0\" x 12'0\", Bedroom 3: 12'0\" x 10'0\", Kitchen: 9'0\" x 7'0\", Utility: 3'0\" x 4'11\", Toilet 1: 4'0\" x 7'0\", Toilet 2: 4'0\" x 7'6\", Toilet 3: 4'0\" x 7'0\", Foyer: 3'11\" Wide, Deck: 5'0\" x 4'3\", Passage: 3' Wide (Unit 2 is Mirror)]",
         "Units 3, 6, 7 & 10: 1 BHK — RERA carpet 405 sq ft / Total 405 sq ft (no additional area)",
-        "Units 4 & 5: Elite 2 BHK — RERA carpet 625 sq ft + Additional 36 sq ft / Total 661 sq ft",
-        "Units 8 & 9: Elite 3 BHK — RERA carpet 809 sq ft + Additional 39 sq ft / Total 848 sq ft"
+        "Units 4 & 5: Elite 2 BHK — RERA carpet 625 sq ft + Additional 36 sq ft / Total 661 sq ft [Rooms: Living/Dining: 10'0\" x 15'2\", Bedroom 1: 11'0\" x 10'2\", Bedroom 2: 10'0\" x 13'0\", Kitchen: 9'0\" x 7'3\", Utility: 2'10\" x 4'6\", Toilet 1: 7'0\" x 4'0\", Toilet 2: 4'0\" x 7'0\", Balcony: 5'3\" x 4'5\", Foyer: 3'7\" Wide, Passage: 3' Wide (Unit 5 is Mirror)]",
+        "Units 8 & 9: Elite 3 BHK — RERA carpet 809 sq ft + Additional 39 sq ft / Total 848 sq ft [Rooms: Living/Dining: 10'0\" x 15'2\", Bedroom 1: 10'0\" x 12'0\", Bedroom 2: 10'0\" x 12'0\", Bedroom 3: 12'0\" x 10'3\", Kitchen: 9'0\" x 7'2\", Utility: 3'0\" x 5'5\", Toilet 1: 7'0\" x 4'0\", Toilet 2: 4'0\" x 7'0\", Toilet 3: 4'0\" x 6'11\", Balcony: 5'0\" x 4'5\", Foyer: 3'7\" Wide (Unit 9 is Mirror)]"
       ],
       "Tower: Skyline (32nd Floor & Above)": [
-        "Units 1 & 2: Signature 3 BHK — RERA carpet 819 sq ft + Additional 65 sq ft / Total 884 sq ft",
+        "Units 1 & 2: Signature 3 BHK — RERA carpet 819 sq ft + Additional 65 sq ft / Total 884 sq ft [Rooms: Living Room: 10'0\" x 17'0\", Bedroom 1: 10'0\" x 12'0\", Bedroom 2: 10'0\" x 12'0\", Bedroom 3: 12'0\" x 10'0\", Kitchen: 9'0\" x 7'0\", Utility: 3'0\" x 4'11\", Balcony: 9'10\" x 5'0\", Foyer: 3'11\" Wide (Unit 2 is Mirror)]",
         "Units 3, 6, 7 & 10: 1 BHK — RERA carpet 412 sq ft + Additional 28 sq ft / Total 440 sq ft",
-        "Units 4 & 5: Royale 2 BHK — RERA carpet 627 sq ft + Additional 61 sq ft / Total 688 sq ft",
-        "Units 8 & 9: Royale 3 BHK — RERA carpet 811 sq ft + Additional 65 sq ft / Total 876 sq ft",
-        "Unit 9 (alternative variant): Royale 2 BHK — RERA carpet 670 sq ft + Additional 38 sq ft / Total 708 sq ft"
+        "Units 4 & 5: Royale 2 BHK — RERA carpet 627 sq ft + Additional 61 sq ft / Total 688 sq ft [Rooms: Living/Dining: 10'0\" x 15'2\", Bedroom 1: 11'0\" x 10'2\", Bedroom 2: 10'0\" x 13'0\", Kitchen: 9'0\" x 7'3\", Utility: 2'10\" x 4'6\", Balcony: 9'10\" x 5'0\", Foyer: 3'7\" Wide (Unit 5 is Mirror)]",
+        "Units 8 & 9: Royale 3 BHK — RERA carpet 811 sq ft + Additional 65 sq ft / Total 876 sq ft [Rooms: Living/Dining: 10'0\" x 15'2\", Bedroom 1: 10'0\" x 12'0\", Bedroom 2: 10'0\" x 12'0\", Bedroom 3: 12'0\" x 10'3\", Kitchen: 9'0\" x 7'2\", Utility: 3'0\" x 5'5\", Balcony: 9'10\" x 5'0\", Foyer: 3'7\" Wide (Unit 9 is Mirror)]",
+        "Unit 9 (alternative variant): Royale 2 BHK — RERA carpet 670 sq ft + Additional 38 sq ft / Total 708 sq ft [Rooms: Living/Dining: 10'0\" x 15'7\", Bedroom 1: 10'0\" x 12'0\", Bedroom 2: 10'0\" x 15'3\", Kitchen: 9'0\" x 7'2\", Utility: 3'0\" x 5'6\", Toilet 1: 7'0\" x 4'0\", Toilet 2: 4'0\" x 7'0\", Balcony: 5'0\" x 4'5\", Foyer: 3'7\" Wide]"
       ],
       "Tower: Skyline (Jodi Options below 32nd)": [
-        "Units 1 & 2 → 3+3 Jodi: RERA carpet 1,633 sq ft + Additional 74 sq ft / Total 1,707 sq ft",
-        "Units 3 & 4 → 1+2 Jodi: RERA carpet 1,037 sq ft + Additional 35 sq ft / Total 1,072 sq ft",
-        "Units 5 & 6 → 2+1 Jodi: RERA carpet 1,037 sq ft + Additional 35 sq ft / Total 1,072 sq ft",
-        "Units 7 & 8 → 1+3 Jodi: RERA carpet 1,222 sq ft + Additional 38 sq ft / Total 1,260 sq ft",
-        "Units 9 & 10 → 3+1 Jodi: RERA carpet 1,222 sq ft + Additional 38 sq ft / Total 1,260 sq ft"
+        "Units 1 & 2 → 3+3 Jodi: RERA carpet 1,633 sq ft + Additional 74 sq ft / Total 1,707 sq ft [Rooms: Living Room: 20'7\" x 12'11\", Bedroom 1: 10'2\" x 12'5\", Bedroom 2: 10'2\" x 12'5\", Bedroom 3: 12'5\" x 10'6\", Bedroom 4: 10'6\" x 12'5\", Bedroom 5: 10'6\" x 12'5\", Walk-in Wardrobe: 12'5\" x 10'5\", Puja Room: 5'5\" x 12'5\", Kitchen: 11'4\" x 8'0\", Utility: 1'0\" x 4'11\", Foyer: 8'5\" x 6'3\", Balcony: large shared]",
+        "Units 3 & 4 → 1+2 Jodi: RERA carpet 1,037 sq ft + Additional 35 sq ft / Total 1,072 sq ft [Rooms: Living/Dining: 14'7\" x 15'2\", Bedroom 1: 10'2\" x 10'8\", Bedroom 2: 10'0\" x 13'0\", Bedroom 3: 11'0\" x 10'2\", Study Room: 7'9\" x 7'10\", Walk-in Wardrobe: 6'11\" x 4'5\", Kitchen: 9'0\" x 12'0\", Utility: 2'10\" x 4'5\", Balcony: 5'0\" x 4'5\", Foyer: 7'5\" x 3'9\"]",
+        "Units 5 & 6 → 2+1 Jodi: RERA carpet 1,037 sq ft + Additional 35 sq ft / Total 1,072 sq ft [Rooms: Mirror of Units 3 & 4]",
+        "Units 7 & 8 → 1+3 Jodi: RERA carpet 1,222 sq ft + Additional 38 sq ft / Total 1,260 sq ft [Rooms: Living/Dining: 15'3\" x 15'3\", Bedroom 1: 10'0\" x 12'5\", Bedroom 2: 10'0\" x 12'0\", Bedroom 3: 12'0\" x 10'3\", Bedroom 4: 10'2\" x 10'8\", Study: 7'9\" x 7'10\", Kitchen: 9'0\" x 12'0\", Utility: 3'11\" x 6'5\", Balcony: 5'0\" x 4'5\", Foyer: 3'7\" Wide]",
+        "Units 9 & 10 → 3+1 Jodi: RERA carpet 1,222 sq ft + Additional 38 sq ft / Total 1,260 sq ft [Rooms: Mirror of Units 7 & 8]"
       ],
       "Tower: Skyline (Jodi Options 32nd & above)": [
-        "Units 1 & 2 → 3+3 Jodi: RERA carpet 1,648 sq ft + Additional 132 sq ft / Total 1,780 sq ft",
-        "Units 3 & 4 → 2+1 Jodi: RERA carpet 1,048 sq ft + Additional 92 sq ft / Total 1,140 sq ft",
-        "Units 5 & 6 → 2+1 Jodi: RERA carpet 1,048 sq ft + Additional 92 sq ft / Total 1,140 sq ft",
-        "Units 7 & 8 → 3+1 Jodi: RERA carpet 1,232 sq ft + Additional 96 sq ft / Total 1,328 sq ft",
-        "Units 9 & 10 → 3+1 Jodi: RERA carpet 1,232 sq ft + Additional 96 sq ft / Total 1,328 sq ft"
+        "Units 1 & 2 → 3+3 Jodi: RERA carpet 1,648 sq ft + Additional 132 sq ft / Total 1,780 sq ft [Rooms: Living Room: 20'7\" x 12'11\", Bedroom 1: 10'2\" x 12'0\", Bedroom 2: 10'2\" x 12'5\", Bedroom 3: 12'5\" x 10'6\", Bedroom 4: 10'6\" x 12'0\", Bedroom 5: 10'6\" x 12'5\", Walk-in Wardrobe: 12'5\" x 10'5\", Kitchen: 11'4\" x 8'0\", Utility: 1'0\" x 4'7\", Balcony: large shared]",
+        "Units 3 & 4 → 2+1 Jodi: RERA carpet 1,048 sq ft + Additional 92 sq ft / Total 1,140 sq ft [Rooms: Living/Dining: 14'7\" x 15'2\", Bedroom 1: 10'2\" x 10'8\", Bedroom 2: 10'0\" x 13'0\", Bedroom 3: 11'9\" x 12'2\", Study Room: 7'8\" x 7'10\", Walk-in Wardrobe: 6'11\" x 4'5\", Kitchen: 9'0\" x 12'0\", Utility: 3'10\" x 4'6\", Balcony: 15'11\" x 6'0\", Foyer: 7'5\" x 3'9\"]",
+        "Units 5 & 6 → 2+1 Jodi: RERA carpet 1,048 sq ft + Additional 92 sq ft / Total 1,140 sq ft [Rooms: Mirror of Units 3 & 4]",
+        "Units 7 & 8 → 3+1 Jodi: RERA carpet 1,232 sq ft + Additional 96 sq ft / Total 1,328 sq ft [Rooms: Living/Dining: 15'3\" x 15'2\", Bedroom 1: 10'0\" x 12'0\", Bedroom 2: 10'0\" x 12'0\", Bedroom 3: 12'0\" x 10'3\", Bedroom 4: 10'2\" x 10'8\", Study: 7'9\" x 7'10\", Kitchen: 9'0\" x 12'0\", Utility: 3'0\" x 6'5\", Balcony: 15'11\" x 5'0\", Foyer: 3'7\" Wide]",
+        "Units 9 & 10 → 3+1 Jodi: RERA carpet 1,232 sq ft + Additional 96 sq ft / Total 1,328 sq ft [Rooms: Mirror of Units 7 & 8]"
       ]
     },
     usp: [

@@ -1,4 +1,5 @@
 import "./globals.css";
+import AuthProvider from './AuthProvider';
 
 export const metadata = {
   title: "Chandak CMIS",
@@ -13,15 +14,17 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#0a0a1a" />
       </head>
-      <body className="" suppressHydrationWarning>
-        <div className="page-container">
-          {children}
-        </div>
+      <body suppressHydrationWarning>
+        <AuthProvider>
+          <div className="page-container">
+            {children}
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

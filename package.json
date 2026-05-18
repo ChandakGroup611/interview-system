@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -11,8 +11,11 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "@supabase/supabase-js": "^2.105.1",
+    "form-data": "^4.0.5",
+    "groq-sdk": "^1.1.2",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",
+    "next-auth": "^4.24.14",
     "nodemailer": "^8.0.7",
     "pdfkit": "^0.18.0",
     "react": "19.2.4",

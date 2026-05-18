@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function SessionDetailPage({ params }) {
@@ -12,6 +12,10 @@ export default function SessionDetailPage({ params }) {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState('transcript');
   const [evaluating, setEvaluating] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resendMessage, setResendMessage] = useState('');
+  const [playingAudioId, setPlayingAudioId] = useState(null);
+  const audioObjRef = useRef(null);
 
   useEffect(() => {
     checkAuth();
@@ -60,6 +64,38 @@ export default function SessionDetailPage({ params }) {
     } finally {
       setEvaluating(false);
     }
+  };
+
+  const handleResend = async () => {
+    setResending(true);
+    setResendMessage('');
+    try {
+      const res = await fetch('/api/admin/resend-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setResendMessage(data.message);
+      fetchSession();
+    } catch (err) {
+      setResendMessage(`Error: ${err.message}`);
+    } finally {
+      setResending(false);
+    }
+  };
+
+  const playAudio = (url, id) => {
+    if (audioObjRef.current) {
+      audioObjRef.current.pause();
+    }
+    setPlayingAudioId(id);
+    const audio = new Audio(url);
+    audioObjRef.current = audio;
+    audio.onended = () => setPlayingAudioId(null);
+    audio.onerror = () => setPlayingAudioId(null);
+    audio.play().catch(() => setPlayingAudioId(null));
   };
 
   if (authChecking || loading) {
@@ -114,10 +150,15 @@ export default function SessionDetailPage({ params }) {
               id: {session.id.split('-')[0]}
             </span>
           </div>
-          <div style={{ display: 'flex', gap: '16px' }}>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
             {session.status !== 'evaluated' && session.status === 'completed' && (
               <button className="btn btn-primary" onClick={handleEvaluate} disabled={evaluating}>
                 {evaluating ? 'Processing...' : 'Run Evaluation Pipeline'}
+              </button>
+            )}
+            {report && (
+              <button className="btn" onClick={handleResend} disabled={resending}>
+                {resending ? 'Sending...' : 'Resend Report'}
               </button>
             )}
             {report?.pdf_url && (
@@ -126,6 +167,11 @@ export default function SessionDetailPage({ params }) {
               </a>
             )}
           </div>
+          {resendMessage && (
+            <div style={{ position: 'absolute', top: '60px', right: '48px', padding: '8px 16px', background: resendMessage.startsWith('Error') ? '#8B0000' : '#27ae60', color: '#fff', fontSize: '0.8rem', fontFamily: 'var(--font-data)', borderRadius: '4px' }}>
+              {resendMessage}
+            </div>
+          )}
         </header>
 
         <div style={{ padding: '32px 48px', flex: 1, overflowY: 'auto', maxWidth: '1000px' }}>
@@ -137,7 +183,7 @@ export default function SessionDetailPage({ params }) {
               <div className="text-mono" style={{ fontSize: '1rem', color: 'var(--text-black)' }}>{candidate?.name || 'null'}</div>
             </div>
             <div className="card">
-              <div className="form-label">candidates.phone</div>
+              <div className="form-label">Chandak Mail id</div>
               <div className="text-mono" style={{ fontSize: '1rem', color: 'var(--text-black)' }}>{candidate?.phone || 'null'}</div>
             </div>
             <div className="card">
@@ -216,9 +262,13 @@ export default function SessionDetailPage({ params }) {
                       <div className="text-mono" style={{ fontSize: '0.85rem', color: 'var(--text-black)' }}>
                         Q{audio.question}.webm
                       </div>
-                      <audio controls style={{ height: '32px' }} preload="none">
-                        <source src={audio.url} type="audio/webm" />
-                      </audio>
+                      <button 
+                        className="btn btn-sm" 
+                        onClick={() => playAudio(audio.url, idx)}
+                        disabled={!audio.url}
+                      >
+                        {playingAudioId === idx ? 'Playing...' : 'Play Audio'}
+                      </button>
                     </div>
                   ))
                 )}

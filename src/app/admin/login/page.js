@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, use } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function AdminLoginPage() {
+export default function AdminLoginPage({ params, searchParams }) {
+  use(params);
+  use(searchParams);
   const router = useRouter();
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
@@ -74,6 +76,7 @@ export default function AdminLoginPage() {
                 disabled={loading}
                 autoComplete="username"
                 autoFocus
+                suppressHydrationWarning
               />
             </div>
 
@@ -89,6 +92,7 @@ export default function AdminLoginPage() {
                 disabled={loading}
                 autoComplete="current-password"
                 style={{ paddingRight: '48px' }}
+                suppressHydrationWarning
               />
               <button
                 type="button"

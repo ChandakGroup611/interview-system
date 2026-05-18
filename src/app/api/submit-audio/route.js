@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { PROJECTS } from '@/lib/projectData';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 300; // 5 minutes — allows time for batch STT polling
 
 export async function POST(request) {
   try {
@@ -71,19 +72,44 @@ export async function POST(request) {
       audioUrl = urlData?.publicUrl || '';
     }
 
-    // Transcribe audio to English using Gemini
-    const transcribedText = await transcribeAudio(audioBase64, mimeType);
+    // Get conversation history and last AI question for context
+    const conversationHistory = session.conversation_history || [];
+    let lastAiQuestion = '';
 
-    if (transcribedText === '[inaudible]') {
+    if (conversationHistory.length > 0) {
+      const lastMsg = conversationHistory[conversationHistory.length - 1];
+      if (lastMsg.role === 'ai') lastAiQuestion = lastMsg.content;
+    } else if (session.transcript && session.transcript.length > 0) {
+      const firstMsg = session.transcript[0];
+      if (firstMsg.role === 'ai') lastAiQuestion = firstMsg.content;
+    }
+
+    // Transcribe audio using Sarvam AI Saaras V3
+    let transcribedText, sttMetadata;
+    try {
+      const result = await Promise.race([
+        transcribeAudio(audioBase64, mimeType, lastAiQuestion),
+        new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('STT timeout after 150 seconds')), 150000)
+        )
+      ]);
+      transcribedText = result.text;
+      sttMetadata = result.metadata;
+    } catch (sttErr) {
+      console.error('STT failed or timed out:', sttErr.message);
       return NextResponse.json({
         success: false,
-        error: 'Could not understand the audio. Please speak clearly and try again.',
+        error: "Audio processing timed out. Please record again.",
         retry: true,
       });
     }
-
-    // Get conversation history
-    const conversationHistory = session.conversation_history || [];
+    if (transcribedText === '[inaudible]') {
+      return NextResponse.json({
+        success: false,
+        error: "We couldn't understand your audio. Please record again.",
+        retry: true,
+      });
+    }
     const currentQuestion = session.current_question || 1;
     const totalQuestions = 10;
 
@@ -92,7 +118,7 @@ export async function POST(request) {
     const personaChanged = false;
     const personaTransitions = session.persona_transitions || [];
 
-    // Update conversation history with user's answer
+    // Update conversation history with user's answer (plain text only for Claude)
     conversationHistory.push({ role: 'user', content: transcribedText });
 
     // Check if interview is complete
@@ -102,7 +128,7 @@ export async function POST(request) {
     let projectId = session.project_id;
     if (!projectId) {
       const firstAiMessage = session.transcript?.[0]?.content || '';
-      const foundId = Object.keys(PROJECTS).find(id => 
+      const foundId = Object.keys(PROJECTS).find(id =>
         firstAiMessage.toLowerCase().includes(PROJECTS[id].projectName.toLowerCase())
       );
       projectId = foundId || 'greenairy';
@@ -127,13 +153,14 @@ export async function POST(request) {
       conversationHistory.push({ role: 'ai', content: aiResponse });
     }
 
-    // Update transcript
+    // Update transcript (including Google STT metadata)
     const transcript = session.transcript || [];
     transcript.push({
       role: 'user',
       content: transcribedText,
       audio_url: audioUrl,
       timestamp: new Date().toISOString(),
+      stt_metadata: sttMetadata || null,
     });
     transcript.push({
       role: 'ai',

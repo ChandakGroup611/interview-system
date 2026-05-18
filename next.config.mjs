@@ -8,7 +8,7 @@ const nextConfig = {
   },
   
   // External packages that need to be bundled for server-side
-  serverExternalPackages: ['pdfkit', 'nodemailer'],
+  serverExternalPackages: ['pdfkit'],
 
   // Headers for audio/CORS
   async headers() {

@@ -52,15 +52,15 @@ export async function POST(request) {
     let projectId = session.project_id;
     if (!projectId) {
       const firstAiMessage = session.transcript?.[0]?.content || '';
-      const foundId = Object.keys(PROJECTS).find(id => 
+      const foundId = Object.keys(PROJECTS).find(id =>
         firstAiMessage.toLowerCase().includes(PROJECTS[id].projectName.toLowerCase())
       );
       projectId = foundId || 'greenairy';
     }
-    
+
     const evaluationPrompt = buildEvaluationPrompt(transcript, candidate.name, projectId);
 
-    // Evaluate using Gemini
+    // Evaluate using Claude
     const evaluationResult = await evaluateInterview(transcript, evaluationPrompt);
 
     // Generate PDF report

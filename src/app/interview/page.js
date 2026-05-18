@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, use } from 'react';
 import { useRouter } from 'next/navigation';
-import { Mic } from 'lucide-react';
+import { Mic, Volume2, RotateCcw } from 'lucide-react';
 
 const PERSONA_LABEL = {
   'arrogant': 'Arrogant',
@@ -10,9 +10,12 @@ const PERSONA_LABEL = {
   'easy-going': 'Easy-going',
 };
 
-const READ_TIME_SECONDS = 30;
+const READ_TIME_SECONDS = 45;
 
-export default function InterviewPage() {
+
+export default function InterviewPage({ params, searchParams }) {
+  const unwrappedParams = use(params);
+  const unwrappedSearchParams = use(searchParams);
   const router = useRouter();
   const [sessionData, setSessionData] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -32,8 +35,9 @@ export default function InterviewPage() {
   const [readTimer, setReadTimer] = useState(READ_TIME_SECONDS);
   const [timerActive, setTimerActive] = useState(false);
 
-  const [decisionPhase, setDecisionPhase] = useState('none'); 
+  const [decisionPhase, setDecisionPhase] = useState('none');
   const [decisionTimer, setDecisionTimer] = useState(10);
+  const [isPlayingAudio, setIsPlayingAudio] = useState(false);
 
   const messagesEndRef = useRef(null);
   const mediaRecorderRef = useRef(null);
@@ -41,10 +45,100 @@ export default function InterviewPage() {
   const timerRef = useRef(null);
   const readTimerRef = useRef(null);
   const streamRef = useRef(null);
-  const audioRef = useRef(null); 
+  const audioRef = useRef(null);
+  const playbackRef = useRef(null);
 
-  const startRecordingRef = useRef(() => {});
-  const submitRecordingRef = useRef(() => {});
+  const startRecordingRef = useRef(() => { });
+  const submitRecordingRef = useRef(() => { });
+
+  const currentTtsSourceRef = useRef(null);
+  const audioContextRef = useRef(null);
+
+  const playAudioFromBase64 = useCallback(async (audio) => {
+    if (!audio) return;
+    try {
+      if (currentTtsSourceRef.current) {
+        currentTtsSourceRef.current.onended = null;
+        currentTtsSourceRef.current.stop();
+        currentTtsSourceRef.current = null;
+      }
+
+      setIsPlayingAudio(true);
+
+      const binary = atob(audio);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+
+      if (!audioContextRef.current || audioContextRef.current.state === 'closed') {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const ctx = audioContextRef.current;
+      if (ctx.state === 'suspended') await ctx.resume();
+
+      const audioBuffer = await ctx.decodeAudioData(bytes.buffer);
+      const source = ctx.createBufferSource();
+      source.buffer = audioBuffer;
+      source.connect(ctx.destination);
+      currentTtsSourceRef.current = source;
+
+      source.onended = () => {
+        setIsPlayingAudio(false);
+        currentTtsSourceRef.current = null;
+      };
+      source.start(0);
+    } catch (err) {
+      console.warn('[Sarvam TTS] Playback failed:', err);
+      setIsPlayingAudio(false);
+    }
+  }, []);
+
+  const speakText = useCallback(async (text) => {
+    if (!text || typeof window === 'undefined') return;
+
+    try {
+      if (currentTtsSourceRef.current) {
+        currentTtsSourceRef.current.onended = null;
+        currentTtsSourceRef.current.stop();
+        currentTtsSourceRef.current = null;
+        setIsPlayingAudio(false);
+      }
+    } catch (_) { /* already stopped */ }
+
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.warn('[Sarvam TTS] API error:', err);
+        return;
+      }
+
+      const { audio } = await res.json();
+      await playAudioFromBase64(audio);
+    } catch (err) {
+      console.warn('[Sarvam TTS] speakText failed:', err);
+      setIsPlayingAudio(false);
+    }
+  }, [playAudioFromBase64]);
+
+  // Cleanup AudioContext on unmount
+  useEffect(() => {
+    return () => {
+      try {
+        if (currentTtsSourceRef.current) {
+          currentTtsSourceRef.current.onended = null;
+          currentTtsSourceRef.current.stop();
+        }
+        if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
+          audioContextRef.current.close();
+        }
+      } catch (_) { /* ignore cleanup errors */ }
+    };
+  }, []);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('interview_session');
@@ -65,7 +159,10 @@ export default function InterviewPage() {
 
     setTimerActive(true);
     setReadTimer(READ_TIME_SECONDS);
-  }, [router]);
+
+    // Speak the first question on load
+    speakText(data.first_question);
+  }, [router, speakText]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -131,19 +228,24 @@ export default function InterviewPage() {
 
   const startRecording = async () => {
     try {
+      if (currentTtsSourceRef.current) {
+        currentTtsSourceRef.current.onended = null;
+        currentTtsSourceRef.current.stop();
+        currentTtsSourceRef.current = null;
+        setIsPlayingAudio(false);
+      }
+    } catch (_) { /* already stopped */ }
+    try {
       setError('');
       setTimerActive(false);
       clearInterval(readTimerRef.current);
       setDecisionPhase('none');
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          sampleRate: 16000,
-          channelCount: 1,
-          echoCancellation: true,
-          noiseSuppression: true,
-        },
-      });
+      if (playbackRef.current) {
+        playbackRef.current.pause();
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       streamRef.current = stream;
       audioChunksRef.current = [];
@@ -160,18 +262,60 @@ export default function InterviewPage() {
         }
       };
 
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const source = audioContext.createMediaStreamSource(stream);
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      source.connect(analyser);
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+      const checkVolume = () => {
+        if (!mediaRecorderRef.current || mediaRecorderRef.current.state === 'inactive') return;
+        analyser.getByteFrequencyData(dataArray);
+        let sum = 0;
+        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+        const average = sum / dataArray.length;
+        if (average > 1) {
+          // Volume detected
+        }
+        requestAnimationFrame(checkVolume);
+      };
+      checkVolume();
+
       mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
-        const url = URL.createObjectURL(audioBlob);
-        setRecordedAudioBlob(audioBlob);
-        setRecordedAudioUrl(url);
-        
-        setDecisionPhase('initial');
-        setDecisionTimer(10);
+        try {
+          const mimeType = mediaRecorderRef.current?.mimeType || 'audio/webm';
+          const chunks = audioChunksRef.current;
+          console.log(`[AudioPipeline] onstop: chunks=${chunks.length}, type=${mimeType}`);
+
+          if (chunks.length === 0) {
+            throw new Error('No audio data captured');
+          }
+
+          const audioBlob = new Blob(chunks, { type: mimeType });
+          if (!audioBlob || audioBlob.size < 100) {
+            throw new Error(`Recording too small (${audioBlob?.size || 0} bytes)`);
+          }
+
+          console.log('[AudioPipeline] Blob created:', audioBlob.size, 'bytes');
+          const url = URL.createObjectURL(audioBlob);
+
+          setRecordedAudioBlob(audioBlob);
+          setRecordedAudioUrl(url);
+          setDecisionPhase('initial');
+          setDecisionTimer(10);
+        } catch (err) {
+          console.error('[AudioPipeline] onstop error:', err.message);
+          setError(`Recording failed: ${err.message}. Please check your microphone.`);
+        } finally {
+          if (streamRef.current) {
+            streamRef.current.getTracks().forEach(track => track.stop());
+          }
+        }
       };
 
       mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.start(100);
+      mediaRecorder.start();
       setIsRecording(true);
     } catch (err) {
       console.error('Microphone error:', err);
@@ -185,50 +329,69 @@ export default function InterviewPage() {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
     }
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-    }
     setIsRecording(false);
   }, []);
 
   const submitRecording = () => {
     if (recordedAudioBlob) {
-      handleAudioSubmit(recordedAudioBlob);
+      if (playbackRef.current) {
+        playbackRef.current.pause();
+        playbackRef.current = null;
+      }
+
+      const blobToSubmit = recordedAudioBlob;
+      const urlToRevoke = recordedAudioUrl;
+
       setRecordedAudioBlob(null);
       setRecordedAudioUrl('');
       setDecisionPhase('none');
-      
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+
+      handleAudioSubmit(blobToSubmit).finally(() => {
+        if (urlToRevoke) URL.revokeObjectURL(urlToRevoke);
+      });
     }
   };
 
   submitRecordingRef.current = submitRecording;
 
   const discardRecording = () => {
+    if (playbackRef.current) {
+      playbackRef.current.pause();
+      playbackRef.current = null;
+    }
+
+    const urlToRevoke = recordedAudioUrl;
     setRecordedAudioBlob(null);
     setRecordedAudioUrl('');
     setDecisionPhase('none');
     setTimerActive(false);
     setReadTimer(0);
-    
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
 
-    startRecordingRef.current();
+    setTimeout(() => {
+      if (urlToRevoke) URL.revokeObjectURL(urlToRevoke);
+      startRecordingRef.current();
+    }, 100);
   };
 
   const listenToRecording = () => {
-    if (audioRef.current && recordedAudioUrl) {
+    if (recordedAudioUrl) {
+      if (playbackRef.current) {
+        playbackRef.current.pause();
+      }
+
       setDecisionPhase('listening');
-      audioRef.current.play().catch(e => {
-        console.error('Playback failed', e);
-        setDecisionPhase('post-listen');
-        setDecisionTimer(10);
+      const audio = new Audio(recordedAudioUrl);
+      playbackRef.current = audio;
+
+      audio.onended = onAudioEnded;
+      audio.onerror = (e) => {
+        console.warn('Playback error', e);
+        onAudioEnded();
+      };
+
+      audio.play().catch(err => {
+        console.warn('Playback failed', err);
+        onAudioEnded();
       });
     }
   };
@@ -261,8 +424,13 @@ export default function InterviewPage() {
       }
 
       if (data.retry) {
-        setError(data.error);
+        setError(data.error + ' Auto-restarting microphone in 5 seconds...');
         setIsProcessing(false);
+        setTimeout(() => {
+          if (startRecordingRef.current) {
+            startRecordingRef.current();
+          }
+        }, 5000);
         return;
       }
 
@@ -272,19 +440,36 @@ export default function InterviewPage() {
         timestamp: new Date().toISOString(),
       }]);
 
-      setTimeout(() => {
-        setMessages(prev => [...prev, {
-          role: 'ai',
-          content: data.ai_response,
-          timestamp: new Date().toISOString(),
-        }]);
+      const aiText = data.ai_response;
 
-        if (!data.is_complete) {
-          setReadTimer(READ_TIME_SECONDS);
-          setTimerActive(true);
-          setDecisionPhase('none');
-        }
-      }, 500);
+      // Fire TTS fetch immediately in parallel — don't wait for it before showing text
+      const ttsPromise = fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: aiText }),
+      });
+
+      // Show text immediately without any delay
+      setMessages(prev => [...prev, {
+        role: 'ai',
+        content: aiText,
+        timestamp: new Date().toISOString(),
+      }]);
+
+      if (!data.is_complete) {
+        setReadTimer(READ_TIME_SECONDS);
+        setTimerActive(true);
+        setDecisionPhase('none');
+      }
+
+      // Play audio from the already-in-flight request
+      ttsPromise.then(async (res) => {
+        if (!res.ok) return;
+        const { audio } = await res.json();
+        await playAudioFromBase64(audio);
+      }).catch(err => {
+        console.warn('[Sarvam TTS] Fetch failed:', err);
+      });
 
       if (data.persona_changed) {
         setPersona(data.persona);
@@ -298,6 +483,7 @@ export default function InterviewPage() {
         triggerBackgroundEvaluation();
       }
     } catch (err) {
+      console.error('[AudioPipeline] Audio submit failed:', err);
       setError(err.message);
     } finally {
       setIsProcessing(false);
@@ -312,6 +498,7 @@ export default function InterviewPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ session_id: sessionData.session_id }),
+        keepalive: true,
       });
       if (response.ok) {
         setEvaluationDone(true);
@@ -333,7 +520,6 @@ export default function InterviewPage() {
 
   return (
     <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
-      {/* Top Nav */}
       <header className="top-bar" style={{ padding: '32px 48px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Chandak CMIS</h1>
@@ -347,7 +533,6 @@ export default function InterviewPage() {
       </header>
 
       <div style={{ padding: '32px 48px', flex: 1, display: 'flex', flexDirection: 'column', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
-        {/* Header Metadata */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
           <div>
             <h2 style={{ fontSize: '2rem', marginBottom: '8px' }}>Interview Simulator</h2>
@@ -370,13 +555,12 @@ export default function InterviewPage() {
           </div>
         )}
 
-        {/* Chat Interface */}
         <div className="chat-container">
           <div className="chat-header">
             <span className={`status-indicator status-${isComplete ? 'completed' : 'active'}`}>
               {isComplete ? 'completed' : 'active_session'}
             </span>
-            
+
             {!isComplete && !isRecording && !isProcessing && decisionPhase === 'none' && (
               <div style={{ fontFamily: 'var(--font-data)', fontSize: '0.85rem' }}>
                 {timerActive && readTimer > 0 ? (
@@ -389,16 +573,37 @@ export default function InterviewPage() {
           </div>
 
           <div className="chat-messages">
-            {messages.map((msg, idx) => (
-              <div key={idx} className={`message message-${msg.role === 'ai' ? 'ai' : 'user'}`}>
-                <div className="message-sender">
-                  {msg.role === 'ai' ? 'ai_customer' : 'candidate'} / {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
+            {messages.map((msg, idx) => {
+              const isLastAiMsg = msg.role === 'ai' && idx === messages.map(m => m.role).lastIndexOf('ai');
+              return (
+                <div key={idx} className={`message message-${msg.role === 'ai' ? 'ai' : 'user'}`}>
+                  <div className="message-sender" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <span>{msg.role === 'ai' ? 'ai_customer' : 'candidate'} / {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}</span>
+                    {isLastAiMsg && (
+                      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                        {isPlayingAudio && (
+                          <div className="audio-playing-indicator">
+                            <Volume2 size={14} className="mic-pulsing" color="var(--text-muted)" />
+                            <span>speaking</span>
+                          </div>
+                        )}
+                        <button
+                          onClick={() => speakText(msg.content)}
+                          className="btn-text hover-opacity"
+                          title="Replay Audio"
+                          style={{ display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer', background: 'none', border: 'none', color: 'var(--text-muted)', fontFamily: 'var(--font-data)', fontSize: '0.7rem', textTransform: 'uppercase' }}
+                        >
+                          <RotateCcw size={12} /> Replay
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <div className="message-bubble">
+                    {msg.content}
+                  </div>
                 </div>
-                <div className="message-bubble">
-                  {msg.content}
-                </div>
-              </div>
-            ))}
+              );
+            })}
 
             {isProcessing && (
               <div className="message message-ai">
@@ -413,10 +618,8 @@ export default function InterviewPage() {
 
           <div className="chat-input-area">
             {!isComplete ? (
-              decisionPhase !== 'none' && recordedAudioUrl ? (
+              decisionPhase !== 'none' ? (
                 <div style={{ width: '100%' }}>
-                  <audio ref={audioRef} src={recordedAudioUrl} onEnded={onAudioEnded} style={{ display: 'none' }} />
-                  
                   {decisionPhase === 'listening' ? (
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontFamily: 'var(--font-data)', fontSize: '0.85rem', textTransform: 'uppercase' }}>
