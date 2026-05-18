@@ -314,7 +314,7 @@ export default function SessionDetailPage({ params }) {
                 </div>
 
                 <div className="form-label">reports.scores (JSON)</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px', marginBottom: '48px' }}>
                   {report.scores && Object.entries(report.scores).map(([key, data]) => (
                     <div key={key} className="card" style={{ padding: '24px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
@@ -330,6 +330,28 @@ export default function SessionDetailPage({ params }) {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                {/* PDF Download / Generation Option at the End of the Reports Tab */}
+                <div style={{ borderTop: '1px solid var(--border-default)', paddingTop: '32px' }}>
+                  <div className="form-label">reports.pdf_report</div>
+                  <div className="card" style={{ padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+                    <div>
+                      <div style={{ fontWeight: '600', color: 'var(--text-black)', marginBottom: '4px' }}>Interview Evaluation Report (PDF)</div>
+                      <div style={{ fontSize: '0.85rem', color: 'var(--color-mid-dark)', fontFamily: 'var(--font-data)' }}>
+                        {report.pdf_url || 'Status: PDF not generated yet'}
+                      </div>
+                    </div>
+                    {report.pdf_url ? (
+                      <a href={report.pdf_url} target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+                        Download PDF
+                      </a>
+                    ) : (
+                      <button className="btn btn-primary" onClick={handleResend} disabled={resending}>
+                        {resending ? 'Generating...' : 'Generate & Save PDF'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
