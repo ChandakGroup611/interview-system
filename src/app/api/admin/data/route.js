@@ -21,10 +21,12 @@ export async function GET(request) {
       .from(table)
       .select('*', { count: 'exact', head: true });
 
+    const orderColumn = table === 'admin_login_logs' ? 'logged_in_at' : 'created_at';
+
     let query = supabase
       .from(table)
       .select('*')
-      .order('created_at', { ascending: false })
+      .order(orderColumn, { ascending: false })
       .range(offset, offset + limit - 1);
 
     const { data, error } = await query;

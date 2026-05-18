@@ -185,7 +185,7 @@ export default function AdminDashboard({ params, searchParams }) {
             <th>user_id</th>
             <th>ip_address</th>
             <th>status</th>
-            <th className="text-right">created_at</th>
+            <th className="text-right">logged_in_at</th>
           </tr>
         );
       default:
@@ -283,11 +283,11 @@ export default function AdminDashboard({ params, searchParams }) {
               <td className="text-mono">{item.user_id}</td>
               <td className="text-mono">{item.ip_address}</td>
               <td>
-                <span className={`status-indicator status-${item.status}`}>
-                  {item.status}
+                <span className="status-indicator status-completed">
+                  Success
                 </span>
               </td>
-              <td className="text-right text-mono" style={{ fontSize: '0.75rem' }}>{formatDate(item.created_at)}</td>
+              <td className="text-right text-mono" style={{ fontSize: '0.75rem' }}>{formatDate(item.logged_in_at)}</td>
             </tr>
           );
         default:
