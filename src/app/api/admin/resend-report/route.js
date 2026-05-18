@@ -73,6 +73,9 @@ export async function POST(request) {
         .eq('id', report.id);
     } else if (pdfUploadError) {
       console.error('[STORAGE] PDF Upload error in resend:', pdfUploadError);
+      return NextResponse.json({
+        error: `Supabase Storage upload failed: ${pdfUploadError.message}. Please ensure you have created the 'pdf-reports' bucket in your Supabase Dashboard and added a Public INSERT policy.`
+      }, { status: 500 });
     }
 
     // Send email

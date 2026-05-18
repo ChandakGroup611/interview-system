@@ -87,6 +87,9 @@ export async function POST(request) {
       pdfUrl = urlData?.publicUrl || '';
     } else if (pdfUploadError) {
       console.error('[STORAGE] PDF Upload error:', pdfUploadError);
+      return NextResponse.json({
+        error: `Supabase Storage upload failed: ${pdfUploadError.message}. Please ensure you have created the 'pdf-reports' bucket in your Supabase Dashboard and added a Public INSERT policy.`
+      }, { status: 500 });
     }
 
     // Create report in database
