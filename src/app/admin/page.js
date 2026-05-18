@@ -108,6 +108,25 @@ export default function AdminDashboard({ params, searchParams }) {
     }
   };
 
+  const handleGeneratePdfDirectly = async (sessionId) => {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/admin/resend-report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      fetchData(page);
+    } catch (err) {
+      setError(`Failed to generate PDF: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const formatDate = (dateStr) => {
     return new Date(dateStr).toLocaleString('en-US', {
       year: 'numeric', month: '2-digit', day: '2-digit',
@@ -245,7 +264,13 @@ export default function AdminDashboard({ params, searchParams }) {
                     Download PDF
                   </a>
                 ) : (
-                  <span className="text-mono" style={{ fontSize: '0.75rem', color: 'var(--color-mid-dark)' }}>null</span>
+                  <button
+                    className="btn btn-sm"
+                    onClick={() => handleGeneratePdfDirectly(item.session_id)}
+                    style={{ fontSize: '0.65rem', padding: '2px 8px' }}
+                  >
+                    Generate PDF
+                  </button>
                 )}
               </td>
               <td className="text-right text-mono" style={{ fontSize: '0.75rem' }}>{formatDate(item.created_at)}</td>
