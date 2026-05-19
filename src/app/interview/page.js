@@ -53,9 +53,11 @@ export default function InterviewPage({ params, searchParams }) {
 
   const currentTtsSourceRef = useRef(null);
   const audioContextRef = useRef(null);
+  const ttsRequestIdRef = useRef(0);
 
-  const playAudioFromBase64 = useCallback(async (audio) => {
+  const playAudioFromBase64 = useCallback(async (audio, requestId) => {
     if (!audio) return;
+    if (requestId && ttsRequestIdRef.current !== requestId) return;
     try {
       if (currentTtsSourceRef.current) {
         currentTtsSourceRef.current.onended = null;
@@ -76,6 +78,12 @@ export default function InterviewPage({ params, searchParams }) {
       if (ctx.state === 'suspended') await ctx.resume();
 
       const audioBuffer = await ctx.decodeAudioData(bytes.buffer);
+      
+      if (requestId && ttsRequestIdRef.current !== requestId) {
+        setIsPlayingAudio(false);
+        return;
+      }
+
       const source = ctx.createBufferSource();
       source.buffer = audioBuffer;
       source.connect(ctx.destination);
@@ -95,6 +103,9 @@ export default function InterviewPage({ params, searchParams }) {
   const speakText = useCallback(async (text) => {
     if (!text || typeof window === 'undefined') return;
 
+    ttsRequestIdRef.current += 1;
+    const currentRequestId = ttsRequestIdRef.current;
+
     try {
       if (currentTtsSourceRef.current) {
         currentTtsSourceRef.current.onended = null;
@@ -111,6 +122,8 @@ export default function InterviewPage({ params, searchParams }) {
         body: JSON.stringify({ text }),
       });
 
+      if (ttsRequestIdRef.current !== currentRequestId) return;
+
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         console.warn('[Sarvam TTS] API error:', err);
@@ -118,10 +131,13 @@ export default function InterviewPage({ params, searchParams }) {
       }
 
       const { audio } = await res.json();
-      await playAudioFromBase64(audio);
+      if (ttsRequestIdRef.current !== currentRequestId) return;
+      await playAudioFromBase64(audio, currentRequestId);
     } catch (err) {
       console.warn('[Sarvam TTS] speakText failed:', err);
-      setIsPlayingAudio(false);
+      if (ttsRequestIdRef.current === currentRequestId) {
+        setIsPlayingAudio(false);
+      }
     }
   }, [playAudioFromBase64]);
 
@@ -227,12 +243,13 @@ export default function InterviewPage({ params, searchParams }) {
   };
 
   const startRecording = async () => {
+    ttsRequestIdRef.current += 1;
+    setIsPlayingAudio(false);
     try {
       if (currentTtsSourceRef.current) {
         currentTtsSourceRef.current.onended = null;
         currentTtsSourceRef.current.stop();
         currentTtsSourceRef.current = null;
-        setIsPlayingAudio(false);
       }
     } catch (_) { /* already stopped */ }
     try {
@@ -443,6 +460,9 @@ export default function InterviewPage({ params, searchParams }) {
       const aiText = data.ai_response;
 
       // Fire TTS fetch immediately in parallel — don't wait for it before showing text
+      ttsRequestIdRef.current += 1;
+      const currentRequestId = ttsRequestIdRef.current;
+
       const ttsPromise = fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -465,8 +485,10 @@ export default function InterviewPage({ params, searchParams }) {
       // Play audio from the already-in-flight request
       ttsPromise.then(async (res) => {
         if (!res.ok) return;
+        if (ttsRequestIdRef.current !== currentRequestId) return;
         const { audio } = await res.json();
-        await playAudioFromBase64(audio);
+        if (ttsRequestIdRef.current !== currentRequestId) return;
+        await playAudioFromBase64(audio, currentRequestId);
       }).catch(err => {
         console.warn('[Sarvam TTS] Fetch failed:', err);
       });
