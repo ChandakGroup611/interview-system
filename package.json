@@ -15,9 +15,9 @@
     "form-data": "^4.0.5",
     "groq-sdk": "^1.1.2",
     "lucide-react": "^1.14.0",
-    "next": "16.2.4",
+    "next": "^16.2.12",
     "next-auth": "^4.24.14",
-    "nodemailer": "^7.0.13",
+    "nodemailer": "^9.0.3",
     "pdfkit": "^0.18.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
@@ -29,8 +29,15 @@
     "@types/node": "25.8.0",
     "@types/react": "19.2.14",
     "eslint": "^9",
-    "eslint-config-next": "16.2.4",
+    "eslint-config-next": "^16.2.12",
     "tailwindcss": "^4",
     "typescript": "6.0.3"
+  },
+  "overrides": {
+    "brace-expansion": "^5.0.8",
+    "next": "^16.2.12",
+    "nodemailer": "^9.0.3",
+    "postcss": "^8.4.38",
+    "sharp": "^0.35.0"
   }
 }
